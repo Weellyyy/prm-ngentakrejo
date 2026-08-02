@@ -13,6 +13,19 @@ use App\Models\ProgramKerja;
 
 class PublicContentController extends Controller
 {
+    private function publicImageUrl(?string $path): ?string
+    {
+        if (empty($path)) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        return asset('storage/'.$path);
+    }
+
     private function siteData(): array
     {
         $profil = ProfilPrm::where('is_active', true)->latest()->first();
@@ -24,7 +37,8 @@ class PublicContentController extends Controller
         $donasi = LaporanDonasi::orderBy('created_at', 'desc')->first();
         $pengaturan = Pengaturan::pluck('value', 'key');
 
-        $heroBackground = $profil?->hero_background_image ?: 'https://images.unsplash.com/photo-1523162620-3f5c1c9f0fbb?auto=format&fit=crop&w=1600&q=80';
+        $heroBackground = $this->publicImageUrl($profil?->hero_background_image)
+            ?: 'https://images.unsplash.com/photo-1523162620-3f5c1c9f0fbb?auto=format&fit=crop&w=1600&q=80';
 
         return compact('profil', 'pengurus', 'agendas', 'programKerja', 'media', 'iklan', 'donasi', 'pengaturan', 'heroBackground');
     }
@@ -37,41 +51,13 @@ class PublicContentController extends Controller
             'pageTitle' => 'PRM Ngentakrejo',
             'pageDescription' => $data['profil']?->deskripsi ?? 'Ringkasan informasi PRM, agenda, program kerja, media dakwah, donasi, dan ruang iklan.',
             'highlights' => [
-                [
-                    'title' => 'Profil PRM',
-                    'description' => 'Visi, misi, latar belakang, dan daftar pengurus.',
-                    'route' => 'profil-prm',
-                ],
-                [
-                    'title' => 'Agenda Kegiatan',
-                    'description' => 'Jadwal kegiatan rutin dan agenda mendatang.',
-                    'route' => 'agenda',
-                ],
-                [
-                    'title' => 'Informasi PRM',
-                    'description' => 'Alamat, kontak, dan media sosial resmi.',
-                    'route' => 'informasi-prm',
-                ],
-                [
-                    'title' => 'Program Kerja',
-                    'description' => 'Daftar program kerja dan status pelaksanaannya.',
-                    'route' => 'program-kerja',
-                ],
-                [
-                    'title' => 'Media Dakwah',
-                    'description' => 'Artikel dan konten dakwah terbaru.',
-                    'route' => 'media-dakwah',
-                ],
-                [
-                    'title' => 'Ruang Iklan',
-                    'description' => 'Slot promosi untuk usaha dan kegiatan jamaah.',
-                    'route' => 'ruang-iklan',
-                ],
-                [
-                    'title' => 'Donasi',
-                    'description' => 'Ringkasan pemasukan, pengeluaran, dan catatan donasi.',
-                    'route' => 'donasi',
-                ],
+                ['title' => 'Profil PRM', 'description' => 'Visi, misi, latar belakang, dan daftar pengurus.', 'route' => 'profil-prm'],
+                ['title' => 'Agenda Kegiatan', 'description' => 'Jadwal kegiatan rutin dan agenda mendatang.', 'route' => 'agenda'],
+                ['title' => 'Informasi PRM', 'description' => 'Alamat, kontak, dan media sosial resmi.', 'route' => 'informasi-prm'],
+                ['title' => 'Program Kerja', 'description' => 'Daftar program kerja dan status pelaksanaannya.', 'route' => 'program-kerja'],
+                ['title' => 'Media Dakwah', 'description' => 'Artikel dan konten dakwah terbaru.', 'route' => 'media-dakwah'],
+                ['title' => 'Ruang Iklan', 'description' => 'Slot promosi untuk usaha dan kegiatan jamaah.', 'route' => 'ruang-iklan'],
+                ['title' => 'Donasi', 'description' => 'Ringkasan pemasukan, pengeluaran, dan catatan donasi.', 'route' => 'donasi'],
             ],
         ]);
     }
@@ -84,21 +70,9 @@ class PublicContentController extends Controller
             'pageTitle' => 'Profil PRM',
             'pageDescription' => 'Visi, misi, latar belakang, dan daftar pengurus PRM.',
             'sections' => [
-                [
-                    'title' => 'Visi',
-                    'type' => 'text',
-                    'items' => [$data['profil']?->visi ?? 'Mewujudkan PRM yang aktif, mandiri, dan bermanfaat bagi jamaah serta lingkungan sekitar.'],
-                ],
-                [
-                    'title' => 'Misi',
-                    'type' => 'text',
-                    'items' => [$data['profil']?->misi ?? 'Menguatkan dakwah, pendidikan, pelayanan sosial, dan kolaborasi program yang berdampak.'],
-                ],
-                [
-                    'title' => 'Latar Belakang',
-                    'type' => 'text',
-                    'items' => [$data['profil']?->latar_belakang ?? 'PRM hadir untuk menjadi wadah gerakan jamaah yang terstruktur dalam pembinaan, pelayanan, dan pengembangan potensi umat di tingkat ranting.'],
-                ],
+                ['title' => 'Visi', 'type' => 'text', 'items' => [$data['profil']?->visi ?? 'Mewujudkan PRM yang aktif, mandiri, dan bermanfaat bagi jamaah serta lingkungan sekitar.']],
+                ['title' => 'Misi', 'type' => 'text', 'items' => [$data['profil']?->misi ?? 'Menguatkan dakwah, pendidikan, pelayanan sosial, dan kolaborasi program yang berdampak.']],
+                ['title' => 'Latar Belakang', 'type' => 'text', 'items' => [$data['profil']?->latar_belakang ?? 'PRM hadir untuk menjadi wadah gerakan jamaah yang terstruktur dalam pembinaan, pelayanan, dan pengembangan potensi umat di tingkat ranting.']],
                 [
                     'title' => 'Daftar Pengurus',
                     'type' => 'cards',
@@ -106,6 +80,7 @@ class PublicContentController extends Controller
                         'title' => $item->nama,
                         'meta' => $item->jabatan,
                         'description' => $item->bidang,
+                        'image' => $this->publicImageUrl($item->gambar),
                     ])->all(),
                 ],
             ],
@@ -178,6 +153,7 @@ class PublicContentController extends Controller
                         'title' => $item->nama,
                         'meta' => 'Kontak: '.$item->kontak,
                         'description' => $item->deskripsi ?? 'Informasi iklan belum diisi.',
+                        'image' => $this->publicImageUrl($item->gambar),
                     ])->all(),
                 ],
             ],
@@ -197,15 +173,11 @@ class PublicContentController extends Controller
                     'type' => 'cards',
                     'items' => [
                         ['title' => 'Periode', 'meta' => 'Laporan terbaru', 'description' => $data['donasi']?->periode ?? 'Belum ada laporan'],
-                        ['title' => 'Masuk', 'meta' => 'Total pemasukan', 'description' => 'Rp '.number_format((float) ($data['donasi']?->masuk ?? 0), 0, ',', '.')],
-                        ['title' => 'Keluar', 'meta' => 'Total pengeluaran', 'description' => 'Rp '.number_format((float) ($data['donasi']?->keluar ?? 0), 0, ',', '.')],
+                        ['title' => 'Masuk', 'meta' => 'Total pemasukan', 'description' => 'Rp '.number_format((float) ($data['donasi']?->masuk ?? 0), 0, ',', '.')] ,
+                        ['title' => 'Keluar', 'meta' => 'Total pengeluaran', 'description' => 'Rp '.number_format((float) ($data['donasi']?->keluar ?? 0), 0, ',', '.')] ,
                     ],
                 ],
-                [
-                    'title' => 'Keterangan',
-                    'type' => 'text',
-                    'items' => [$data['donasi']?->keterangan ?? 'Belum ada catatan donasi.'],
-                ],
+                ['title' => 'Keterangan', 'type' => 'text', 'items' => [$data['donasi']?->keterangan ?? 'Belum ada catatan donasi.']],
             ],
         ]);
     }
@@ -246,6 +218,7 @@ class PublicContentController extends Controller
                         'title' => $item->judul,
                         'meta' => $item->tanggal.' • '.$item->penulis,
                         'description' => $item->ringkasan,
+                        'image' => $this->publicImageUrl($item->gambar),
                     ])->all(),
                 ],
             ],
