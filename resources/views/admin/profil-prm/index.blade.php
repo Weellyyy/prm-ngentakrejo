@@ -70,6 +70,12 @@
                     </div>
 
                     <div>
+                        <label class="block text-sm font-medium text-gray-700">Gambar Background Beranda</label>
+                        <input type="text" name="hero_background_image" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ old('hero_background_image', $profil->hero_background_image ?? '') }}" placeholder="https://... atau /storage/...">
+                        <p class="mt-1 text-xs text-gray-500">Isi dengan URL gambar atau path publik yang bisa dipakai sebagai background hero beranda.</p>
+                    </div>
+
+                    <div>
                         <label class="block text-sm font-medium text-gray-700">Deskripsi Singkat</label>
                         <textarea name="deskripsi" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ old('deskripsi', $profil->deskripsi ?? '') }}</textarea>
                     </div>

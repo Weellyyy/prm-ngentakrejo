@@ -30,6 +30,7 @@ class ProfilPrmController extends Controller
             'facebook' => 'nullable|string|max:255',
             'youtube' => 'nullable|string|max:255',
             'whatsapp' => 'nullable|string|max:255',
+            'hero_background_image' => 'nullable|string|max:2048',
             'deskripsi' => 'nullable|string',
             'is_active' => 'nullable|boolean',
         ]);

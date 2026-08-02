@@ -21,6 +21,7 @@ class ProfilPrm extends Model
         'facebook',
         'youtube',
         'whatsapp',
+        'hero_background_image',
         'is_active',
     ];
 }

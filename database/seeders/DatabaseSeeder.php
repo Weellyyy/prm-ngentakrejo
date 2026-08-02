@@ -25,10 +25,13 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => bcrypt('password'),
+            ]
+        );
 
         $profil = ProfilPrm::updateOrCreate(
             ['nama_organisasi' => 'PRM Ngentakrejo'],
@@ -44,6 +47,7 @@ class DatabaseSeeder extends Seeder
                 'facebook' => 'PRM Ngentakrejo',
                 'youtube' => 'PRM Ngentakrejo TV',
                 'whatsapp' => '0812-3456-7890',
+                'hero_background_image' => 'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1600&q=80',
                 'is_active' => true,
             ]
         );
