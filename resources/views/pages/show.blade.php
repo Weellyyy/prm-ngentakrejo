@@ -24,10 +24,19 @@
 
                 @if ($section['type'] === 'text')
                     <div class="mt-6 space-y-4 text-slate-600 leading-relaxed">
+                        @if (!empty($section['image']))
+                            <img src="{{ $section['image'] }}" alt="{{ $section['title'] }}" class="w-full max-h-80 object-cover rounded-2xl mb-4">
+                        @endif
                         @foreach ($section['items'] as $item)
                             <p>{{ $item }}</p>
                         @endforeach
                     </div>
+                @elseif ($section['type'] === 'list')
+                    <ul class="mt-6 space-y-2 text-slate-600 leading-relaxed list-disc list-inside">
+                        @foreach ($section['items'] as $item)
+                            <li>{{ $item }}</li>
+                        @endforeach
+                    </ul>
                 @elseif ($section['type'] === 'cards')
                     @php
                         $isPengurusSection = $section['title'] === 'Daftar Pengurus';
@@ -41,9 +50,34 @@
                                     </div>
                                 @endif
                                 <div class="{{ $isPengurusSection ? 'flex-1' : '' }}">
-                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#b9922e]">{{ $item['meta'] ?? 'PRM' }}</p>
+                                    @if (!empty($item['status']))
+                                        @php
+                                            $statusColor = match ($item['status']) {
+                                                'Berlangsung' => 'bg-amber-100 text-amber-800',
+                                                'Selesai' => 'bg-slate-200 text-slate-600',
+                                                default => 'bg-emerald-100 text-emerald-800', // Akan Datang
+                                            };
+                                        @endphp
+                                        <span class="inline-block rounded-full px-3 py-1 text-xs font-semibold {{ $statusColor }}">{{ $item['status'] }}</span>
+                                    @endif
+
+                                    <p class="mt-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#b9922e]">{{ $item['meta'] ?? 'PRM' }}</p>
                                     <h3 class="mt-3 text-lg font-semibold text-slate-900">{{ $item['title'] }}</h3>
+
+                                    @if ($isPengurusSection)
+                                        @if (!empty($item['periode']))
+                                            <p class="mt-1 text-xs text-slate-500">Periode: {{ $item['periode'] }}</p>
+                                        @endif
+                                        @if (!empty($item['kontak']))
+                                            <p class="mt-1 text-xs text-slate-500">Kontak: {{ $item['kontak'] }}</p>
+                                        @endif
+                                    @endif
+
                                     <p class="mt-3 text-sm leading-6 text-slate-600">{{ $item['description'] ?? 'Belum ada deskripsi.' }}</p>
+
+                                    @if (!empty($item['penanggungJawab']))
+                                        <p class="mt-3 text-xs font-medium text-slate-500">PJ/Kontak: {{ $item['penanggungJawab'] }}</p>
+                                    @endif
                                 </div>
                             </article>
                         @endforeach

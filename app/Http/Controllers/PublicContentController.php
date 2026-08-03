@@ -70,16 +70,33 @@ class PublicContentController extends Controller
             'pageTitle' => 'Profil PRM',
             'pageDescription' => 'Visi, misi, latar belakang, dan daftar pengurus PRM.',
             'sections' => [
-                ['title' => 'Visi', 'type' => 'text', 'items' => [$data['profil']?->visi ?? 'Mewujudkan PRM yang aktif, mandiri, dan bermanfaat bagi jamaah serta lingkungan sekitar.']],
-                ['title' => 'Misi', 'type' => 'text', 'items' => [$data['profil']?->misi ?? 'Menguatkan dakwah, pendidikan, pelayanan sosial, dan kolaborasi program yang berdampak.']],
-                ['title' => 'Latar Belakang', 'type' => 'text', 'items' => [$data['profil']?->latar_belakang ?? 'PRM hadir untuk menjadi wadah gerakan jamaah yang terstruktur dalam pembinaan, pelayanan, dan pengembangan potensi umat di tingkat ranting.']],
+                [
+                    'title' => 'Visi',
+                    'type' => 'text',
+                    'items' => [$data['profil']?->visi ?? 'Mewujudkan PRM yang aktif, mandiri, dan bermanfaat bagi jamaah serta lingkungan sekitar.'],
+                ],
+                [
+                    'title' => 'Misi',
+                    'type' => 'list',
+                    'items' => $data['profil']?->misi
+                        ? array_values(array_filter(preg_split('/\r\n|\r|\n/', $data['profil']->misi)))
+                        : ['Menguatkan dakwah, pendidikan, pelayanan sosial, dan kolaborasi program yang berdampak.'],
+                ],
+                [
+                    'title' => 'Latar Belakang',
+                    'type' => 'text',
+                    'items' => [$data['profil']?->latar_belakang ?? 'PRM hadir untuk menjadi wadah gerakan jamaah yang terstruktur dalam pembinaan, pelayanan, dan pengembangan potensi umat di tingkat ranting.'],
+                    'image' => $this->publicImageUrl($data['profil']?->latar_belakang_image),
+                ],
                 [
                     'title' => 'Daftar Pengurus',
                     'type' => 'cards',
                     'items' => $data['pengurus']->map(fn ($item) => [
                         'title' => $item->nama,
                         'meta' => $item->jabatan,
-                        'description' => $item->bidang,
+                        'periode' => $item->periode_jabatan,
+                        'kontak' => $item->kontak,
+                        'description' => $item->bio ?? 'Belum ada bio.',
                         'image' => $this->publicImageUrl($item->gambar),
                     ])->all(),
                 ],
@@ -102,6 +119,9 @@ class PublicContentController extends Controller
                         'title' => $agenda->judul,
                         'meta' => $agenda->tanggal.' • '.$agenda->waktu.' • '.$agenda->lokasi,
                         'description' => $agenda->deskripsi ?? 'Belum ada deskripsi kegiatan.',
+                        'image' => $this->publicImageUrl($agenda->gambar),
+                        'status' => $agenda->status,
+                        'penanggungJawab' => $agenda->penanggung_jawab,
                     ])->all(),
                 ],
             ],

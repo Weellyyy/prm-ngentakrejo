@@ -23,5 +23,6 @@ class ProfilPrm extends Model
         'whatsapp',
         'hero_background_image',
         'is_active',
+        'latar_belakang_image',
     ];
 }

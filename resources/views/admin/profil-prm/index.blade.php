@@ -42,11 +42,34 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-700">Misi</label>
                         <textarea name="misi" rows="3" class="mt-1 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus:border-emerald-700 focus:ring-emerald-700">{{ old('misi', $profil->misi ?? '') }}</textarea>
+                        <p class="mt-1 text-xs text-slate-500">Tulis satu misi per baris (tekan Enter untuk poin baru).</p>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-slate-700">Latar Belakang</label>
                         <textarea name="latar_belakang" rows="4" class="mt-1 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus:border-emerald-700 focus:ring-emerald-700">{{ old('latar_belakang', $profil->latar_belakang ?? '') }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Gambar Pendukung Latar Belakang</label>
+                        @if (!empty($profil->latar_belakang_image))
+                            @php
+                                $latarBelakangPreview = $profil->latar_belakang_image;
+                                $latarBelakangPreview = str_starts_with($latarBelakangPreview, 'http://') || str_starts_with($latarBelakangPreview, 'https://')
+                                    ? $latarBelakangPreview
+                                    : asset('storage/' . $latarBelakangPreview);
+                            @endphp
+                            <div class="mt-2 mb-3">
+                                <img src="{{ $latarBelakangPreview }}" alt="Gambar Latar Belakang" class="h-40 w-full rounded-2xl object-cover border border-emerald-900/10 shadow-sm">
+                            </div>
+                            <label class="mb-2 flex items-center gap-2 text-sm text-slate-600">
+                                <input type="checkbox" name="remove_latar_belakang_image" value="1" class="rounded border-slate-300 text-red-600 focus:ring-red-500">
+                                Hapus gambar lama saat simpan
+                            </label>
+                        @endif
+                        <label class="block text-sm font-medium text-slate-700">Ganti gambar</label>
+                        <input type="file" name="latar_belakang_image" accept="image/*" class="mt-1 block w-full text-sm text-slate-600 file:mr-4 file:rounded-full file:border-0 file:bg-emerald-50 file:px-4 file:py-2 file:text-emerald-800 hover:file:bg-emerald-100">
+                        <p class="mt-2 text-xs text-slate-500">Opsional. Upload gambar untuk mendukung narasi latar belakang/sejarah PRM.</p>
                     </div>
 
                     <div>
