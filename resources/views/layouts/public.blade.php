@@ -11,7 +11,7 @@
         <header class="sticky top-0 z-50 border-b border-emerald-900/10 bg-white/90 backdrop-blur-xl">
             <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <a href="{{ route('home') }}" class="inline-flex items-center gap-3 text-lg font-bold tracking-wide text-emerald-950">
-                    <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-700 text-white shadow-sm shadow-emerald-700/20">PRM</span>
+                    <img src="{{ asset('images/muhammadiyah.png') }}" alt="Logo Muhammadiyah" class="h-11 w-11 object-contain">
                     <span>
                         <span class="block text-sm font-semibold uppercase tracking-[0.25em] text-emerald-700">Ngentakrejo</span>
                         <span class="block text-base font-bold text-slate-900">PRM Ngentakrejo</span>

@@ -4,7 +4,7 @@
             <div class="flex">
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2">
-                        <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-700 text-sm font-bold text-white shadow-sm shadow-emerald-700/20">PRM</span>
+                        <img src="{{ asset('images/muhammadiyah.png') }}" alt="Logo Muhammadiyah" class="h-10 w-10 object-contain">
                         <span class="hidden sm:block text-sm font-semibold tracking-[0.2em] text-emerald-800">ADMIN</span>
                     </a>
                 </div>
