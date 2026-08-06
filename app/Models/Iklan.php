@@ -8,5 +8,7 @@ class Iklan extends Model
 {
     protected $table = 'iklan';
 
-    protected $fillable = ['nama', 'kontak', 'deskripsi', 'gambar', 'tanggal_expired'];
+    protected $fillable = ['nama', 'kontak', 'deskripsi', 'gambar', 'tanggal_expired', 'link_url',
+    'tanggal_mulai',
+    'status',];
 }

@@ -110,6 +110,23 @@
                         </div>
                     </div>
 
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">TikTok</label>
+                        <input type="text" name="tiktok" class="mt-1 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus:border-emerald-700 focus:ring-emerald-700" value="{{ old('tiktok', $profil->tiktok ?? '') }}">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Jam Operasional Kantor</label>
+                        <input type="text" name="jam_operasional" placeholder="Senin–Jumat, 08.00–16.00 WIB" class="mt-1 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus:border-emerald-700 focus:ring-emerald-700" value="{{ old('jam_operasional', $profil->jam_operasional ?? '') }}">
+                    </div>
+                </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Link Embed Google Maps</label>
+                        <input type="url" name="google_maps_embed" placeholder="https://www.google.com/maps/embed?pb=..." class="mt-1 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus:border-emerald-700 focus:ring-emerald-700" value="{{ old('google_maps_embed', $profil->google_maps_embed ?? '') }}">
+                        <p class="mt-2 text-xs text-slate-500">Buka Google Maps → Bagikan → Sematkan peta → salin URL di dalam <code>src="..."</code>, lalu tempel di sini.</p>
+                    </div>
+
                     <div>
                         <label class="block text-sm font-medium text-slate-700">Gambar Background Beranda</label>
                         @if (!empty($profil->hero_background_image))

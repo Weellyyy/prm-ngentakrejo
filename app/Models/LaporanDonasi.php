@@ -8,5 +8,13 @@ class LaporanDonasi extends Model
 {
     protected $table = 'laporan_donasi';
 
-    protected $fillable = ['periode', 'masuk', 'keluar', 'keterangan'];
+    protected $fillable = [
+        'nama_donatur',
+        'jumlah',
+        'tanggal_donasi',
+        'program_tujuan',
+        'metode_pembayaran',
+        'bukti_transfer',
+        'catatan',
+    ];
 }

@@ -37,13 +37,36 @@
                             <li>{{ $item }}</li>
                         @endforeach
                     </ul>
+                @elseif ($section['type'] === 'map')
+                    @if (!empty($section['embedUrl']))
+                        <div class="mt-6 overflow-hidden rounded-2xl border border-emerald-900/10">
+                            <iframe
+                                src="{{ $section['embedUrl'] }}"
+                                class="h-80 w-full"
+                                style="border:0;"
+                                allowfullscreen
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                    @else
+                        <p class="mt-6 text-slate-500">Peta lokasi belum diatur.</p>
+                    @endif
                 @elseif ($section['type'] === 'cards')
                     @php
                         $isPengurusSection = $section['title'] === 'Daftar Pengurus';
                     @endphp
                     <div class="mt-6 grid gap-4 {{ $isPengurusSection ? 'md:grid-cols-2' : 'md:grid-cols-2 xl:grid-cols-3' }}">
                         @foreach ($section['items'] as $item)
-                            <article class="rounded-2xl border border-emerald-950/10 bg-[#f8fbf9] p-5 transition hover:-translate-y-0.5 hover:border-emerald-700/20 hover:shadow-sm {{ $isPengurusSection ? 'md:flex md:items-center md:gap-5' : '' }}">
+                            @php
+                                $cardTag = !empty($item['linkUrl']) ? 'a' : 'div';
+                            @endphp
+                            <{{ $cardTag }}
+                                @if (!empty($item['linkUrl']))
+                                    href="{{ $item['linkUrl'] }}" target="_blank" rel="noopener noreferrer"
+                                @endif
+                                class="block rounded-2xl border border-emerald-950/10 bg-[#f8fbf9] p-5 transition hover:-translate-y-0.5 hover:border-emerald-700/20 hover:shadow-sm {{ $isPengurusSection ? 'md:flex md:items-center md:gap-5' : '' }}"
+                            >
                                 @if (!empty($item['image']))
                                     <div class="{{ $isPengurusSection ? 'md:w-36 md:shrink-0' : '' }}">
                                         <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" class="mb-4 {{ $isPengurusSection ? 'md:mb-0 h-36 w-full md:h-40 md:w-36' : 'h-44 w-full' }} rounded-xl object-cover">
@@ -75,11 +98,18 @@
 
                                     <p class="mt-3 text-sm leading-6 text-slate-600">{{ $item['description'] ?? 'Belum ada deskripsi.' }}</p>
 
+                                    @if (!empty($item['jumlah']))
+                                        <p class="mt-3 text-base font-semibold text-emerald-700">{{ $item['jumlah'] }}</p>
+                                    @endif
+                                    @if (!empty($item['metode']))
+                                        <p class="mt-1 text-xs text-slate-500">Metode: {{ $item['metode'] }}</p>
+                                    @endif
+
                                     @if (!empty($item['penanggungJawab']))
                                         <p class="mt-3 text-xs font-medium text-slate-500">PJ/Kontak: {{ $item['penanggungJawab'] }}</p>
                                     @endif
                                 </div>
-                            </article>
+                            </{{ $cardTag }}>
                         @endforeach
                     </div>
                 @endif

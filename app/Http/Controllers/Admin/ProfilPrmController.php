@@ -40,6 +40,9 @@ class ProfilPrmController extends Controller
             'latar_belakang_image' => 'nullable|image|max:2048',
             'deskripsi' => 'nullable|string',
             'is_active' => 'nullable|boolean',
+            'tiktok' => 'nullable|string|max:255',
+            'jam_operasional' => 'nullable|string|max:255',
+            'google_maps_embed' => 'nullable|url|max:2048',
         ]);
 
         $data['is_active'] = $request->boolean('is_active', true);

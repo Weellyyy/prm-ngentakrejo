@@ -24,5 +24,8 @@ class ProfilPrm extends Model
         'hero_background_image',
         'is_active',
         'latar_belakang_image',
+        'tiktok',
+        'jam_operasional',
+        'google_maps_embed',
     ];
 }

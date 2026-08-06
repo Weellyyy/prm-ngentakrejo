@@ -143,6 +143,7 @@ class PublicContentController extends Controller
                         ['title' => 'Alamat', 'meta' => 'Lokasi sekretariat', 'description' => $data['pengaturan']['alamat'] ?? $data['profil']?->alamat ?? 'Belum diisi'],
                         ['title' => 'Telepon / WhatsApp', 'meta' => 'Nomor aktif', 'description' => $data['pengaturan']['whatsapp'] ?? $data['profil']?->whatsapp ?? $data['profil']?->telepon ?? 'Belum diisi'],
                         ['title' => 'Email', 'meta' => 'Surat elektronik', 'description' => $data['pengaturan']['email'] ?? $data['profil']?->email ?? 'Belum diisi'],
+                        ['title' => 'Jam Operasional', 'meta' => 'Jadwal kantor', 'description' => $data['pengaturan']['jam_operasional'] ?? $data['profil']?->jam_operasional ?? 'Belum diisi'],
                     ],
                 ],
                 [
@@ -152,7 +153,13 @@ class PublicContentController extends Controller
                         ['title' => 'Instagram', 'meta' => 'Akun resmi', 'description' => $data['pengaturan']['instagram'] ?? $data['profil']?->instagram ?? 'Belum diisi'],
                         ['title' => 'Facebook', 'meta' => 'Halaman resmi', 'description' => $data['pengaturan']['facebook'] ?? $data['profil']?->facebook ?? 'Belum diisi'],
                         ['title' => 'Youtube', 'meta' => 'Channel resmi', 'description' => $data['pengaturan']['youtube'] ?? $data['profil']?->youtube ?? 'Belum diisi'],
+                        ['title' => 'TikTok', 'meta' => 'Akun resmi', 'description' => $data['pengaturan']['tiktok'] ?? $data['profil']?->tiktok ?? 'Belum diisi'],
                     ],
+                ],
+                [
+                    'title' => 'Titik Lokasi',
+                    'type' => 'map',
+                    'embedUrl' => $data['pengaturan']['google_maps_embed'] ?? $data['profil']?->google_maps_embed,
                 ],
             ],
         ]);
@@ -162,6 +169,19 @@ class PublicContentController extends Controller
     {
         $data = $this->siteData();
 
+        $today = now()->toDateString();
+
+        $iklanAktif = \App\Models\Iklan::where('status', 'Aktif')
+            ->where(function ($q) use ($today) {
+                $q->whereNull('tanggal_mulai')->orWhere('tanggal_mulai', '<=', $today);
+            })
+            ->where(function ($q) use ($today) {
+                $q->whereNull('tanggal_expired')->orWhere('tanggal_expired', '>=', $today);
+            })
+            ->orderBy('created_at', 'desc')
+            ->take(6)
+            ->get();
+
         return view('pages.show', $data + [
             'pageTitle' => 'Ruang Iklan',
             'pageDescription' => 'Slot promosi usaha, layanan, dan kegiatan jamaah.',
@@ -169,11 +189,12 @@ class PublicContentController extends Controller
                 [
                     'title' => 'Iklan Aktif',
                     'type' => 'cards',
-                    'items' => $data['iklan']->map(fn ($item) => [
+                    'items' => $iklanAktif->map(fn ($item) => [
                         'title' => $item->nama,
                         'meta' => 'Kontak: '.$item->kontak,
                         'description' => $item->deskripsi ?? 'Informasi iklan belum diisi.',
                         'image' => $this->publicImageUrl($item->gambar),
+                        'linkUrl' => $item->link_url,
                     ])->all(),
                 ],
             ],
@@ -184,24 +205,28 @@ class PublicContentController extends Controller
     {
         $data = $this->siteData();
 
+        $donasiList = \App\Models\LaporanDonasi::orderBy('tanggal_donasi', 'desc')
+            ->take(10)
+            ->get();
+
         return view('pages.show', $data + [
             'pageTitle' => 'Donasi',
-            'pageDescription' => 'Ringkasan donasi dan informasi dukungan untuk program PRM.',
+            'pageDescription' => 'Catatan donasi dan dukungan jamaah untuk program PRM.',
             'sections' => [
                 [
-                    'title' => 'Ringkasan Donasi',
+                    'title' => 'Donasi Terbaru',
                     'type' => 'cards',
-                    'items' => [
-                        ['title' => 'Periode', 'meta' => 'Laporan terbaru', 'description' => $data['donasi']?->periode ?? 'Belum ada laporan'],
-                        ['title' => 'Masuk', 'meta' => 'Total pemasukan', 'description' => 'Rp '.number_format((float) ($data['donasi']?->masuk ?? 0), 0, ',', '.')] ,
-                        ['title' => 'Keluar', 'meta' => 'Total pengeluaran', 'description' => 'Rp '.number_format((float) ($data['donasi']?->keluar ?? 0), 0, ',', '.')] ,
-                    ],
+                    'items' => $donasiList->map(fn ($item) => [
+                        'title' => $item->nama_donatur ?: 'Hamba Allah',
+                        'meta' => \Illuminate\Support\Carbon::parse($item->tanggal_donasi)->translatedFormat('d F Y').($item->program_tujuan ? ' • '.$item->program_tujuan : ''),
+                        'description' => $item->catatan ?? 'Tidak ada catatan.',
+                        'jumlah' => 'Rp '.number_format((float) $item->jumlah, 0, ',', '.'),
+                        'metode' => $item->metode_pembayaran,
+                    ])->all(),
                 ],
-                ['title' => 'Keterangan', 'type' => 'text', 'items' => [$data['donasi']?->keterangan ?? 'Belum ada catatan donasi.']],
             ],
         ]);
     }
-
     public function programKerja()
     {
         $data = $this->siteData();

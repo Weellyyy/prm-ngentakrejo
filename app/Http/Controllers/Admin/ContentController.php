@@ -77,29 +77,35 @@ class ContentController extends Controller
                 'summary' => ['judul', 'penulis', 'tanggal'],
             ],
             'ruang-iklan' => [
-                'label' => 'Ruang Iklan',
-                'model' => Iklan::class,
-                'orderBy' => ['created_at', 'desc'],
-                'fields' => [
-                    ['name' => 'nama', 'label' => 'Nama Iklan', 'type' => 'text'],
-                    ['name' => 'kontak', 'label' => 'Kontak', 'type' => 'text'],
-                    ['name' => 'deskripsi', 'label' => 'Deskripsi', 'type' => 'textarea'],
-                    ['name' => 'gambar', 'label' => 'Gambar', 'type' => 'image'],
-                    ['name' => 'tanggal_expired', 'label' => 'Tanggal Expired', 'type' => 'date'],
-                ],
-                'summary' => ['nama', 'kontak', 'tanggal_expired'],
+            'label' => 'Ruang Iklan',
+            'model' => Iklan::class,
+            'orderBy' => ['created_at', 'desc'],
+            'fields' => [
+                ['name' => 'nama', 'label' => 'Judul Iklan', 'type' => 'text'],
+                ['name' => 'kontak', 'label' => 'Kontak', 'type' => 'text'],
+                ['name' => 'deskripsi', 'label' => 'Deskripsi', 'type' => 'textarea'],
+                ['name' => 'gambar', 'label' => 'Gambar/Banner', 'type' => 'image'],
+                ['name' => 'link_url', 'label' => 'Link Tujuan (saat diklik)', 'type' => 'text'],
+                ['name' => 'tanggal_mulai', 'label' => 'Tanggal Mulai Tayang', 'type' => 'date'],
+                ['name' => 'tanggal_expired', 'label' => 'Tanggal Selesai Tayang', 'type' => 'date'],
+                ['name' => 'status', 'label' => 'Status', 'type' => 'select', 'options' => ['Aktif' => 'Aktif', 'Nonaktif' => 'Nonaktif']],
+            ],
+            'summary' => ['nama', 'kontak', 'tanggal_expired'],
             ],
             'donasi' => [
-                'label' => 'Donasi',
-                'model' => LaporanDonasi::class,
-                'orderBy' => ['created_at', 'desc'],
-                'fields' => [
-                    ['name' => 'periode', 'label' => 'Periode', 'type' => 'text'],
-                    ['name' => 'masuk', 'label' => 'Masuk', 'type' => 'number'],
-                    ['name' => 'keluar', 'label' => 'Keluar', 'type' => 'number'],
-                    ['name' => 'keterangan', 'label' => 'Keterangan', 'type' => 'textarea'],
-                ],
-                'summary' => ['periode', 'masuk', 'keluar'],
+            'label' => 'Donasi',
+            'model' => LaporanDonasi::class,
+            'orderBy' => ['tanggal_donasi', 'desc'],
+            'fields' => [
+                ['name' => 'nama_donatur', 'label' => 'Nama Donatur (kosongkan jika anonim)', 'type' => 'text'],
+                ['name' => 'jumlah', 'label' => 'Jumlah Donasi', 'type' => 'number'],
+                ['name' => 'tanggal_donasi', 'label' => 'Tanggal Donasi', 'type' => 'date'],
+                ['name' => 'program_tujuan', 'label' => 'Program/Tujuan Donasi', 'type' => 'text'],
+                ['name' => 'metode_pembayaran', 'label' => 'Metode Pembayaran', 'type' => 'text'],
+                ['name' => 'bukti_transfer', 'label' => 'Bukti Transfer (khusus verifikasi admin)', 'type' => 'image'],
+                ['name' => 'catatan', 'label' => 'Catatan/Doa', 'type' => 'textarea'],
+            ],
+            'summary' => ['nama_donatur', 'jumlah', 'tanggal_donasi'],
             ],
         ];
     }
@@ -123,7 +129,9 @@ class ContentController extends Controller
         foreach ($this->config($type)['fields'] as $field) {
             $ruleSet = ['nullable'];
 
-            if ($field['type'] === 'text' || $field['type'] === 'textarea' || $field['type'] === 'select') {
+            if ($field['name'] === 'link_url') {
+                $ruleSet[] = 'url';
+            } elseif ($field['type'] === 'text' || $field['type'] === 'textarea' || $field['type'] === 'select') {
                 $ruleSet[] = 'string';
             } elseif ($field['type'] === 'date') {
                 $ruleSet[] = 'date';
