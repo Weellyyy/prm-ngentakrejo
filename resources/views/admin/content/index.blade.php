@@ -7,7 +7,16 @@
                     {{ $config['label'] }}
                 </h2>
             </div>
-            <a href="{{ route('dashboard') }}" class="inline-flex items-center rounded-full border border-emerald-900/10 bg-white px-4 py-2 text-sm font-medium text-emerald-800 transition hover:border-emerald-700 hover:bg-[#f8fbf9]">Kembali ke Dashboard</a>
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="openModal('modal-tambah')"
+                    class="inline-flex items-center gap-1.5 rounded-full bg-emerald-700 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-emerald-700/15 transition hover:bg-emerald-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Tambah {{ $config['label'] }}
+                </button>
+                <a href="{{ route('dashboard') }}" class="inline-flex items-center rounded-full border border-emerald-900/10 bg-white px-4 py-2 text-sm font-medium text-emerald-800 transition hover:border-emerald-700 hover:bg-[#f8fbf9]">Kembali ke Dashboard</a>
+            </div>
         </div>
     </x-slot>
 
@@ -18,49 +27,6 @@
                     {{ session('success') }}
                 </div>
             @endif
-
-            {{-- FORM TAMBAH --}}
-            <div class="rounded-3xl border border-emerald-900/8 bg-white p-6 shadow-[0_18px_40px_rgba(15,23,42,0.05)] lg:p-8">
-                <p class="text-xs font-semibold uppercase tracking-[0.25em] text-emerald-700">Form Tambah</p>
-                <h3 class="mt-2 text-xl font-semibold text-slate-900">Tambah {{ $config['label'] }}</h3>
-                <form method="POST" action="{{ route('admin.content.store', $type) }}" enctype="multipart/form-data" class="mt-6 grid gap-4 lg:grid-cols-2">
-                    @csrf
-                    @foreach ($config['fields'] as $field)
-                        @php $createValue = old($field['name']); @endphp
-                        <div class="{{ $field['type'] === 'textarea' ? 'lg:col-span-2' : '' }}">
-                            <label class="block text-sm font-medium text-slate-700">{{ $field['label'] }}</label>
-
-                            @if ($field['type'] === 'textarea')
-                                <textarea name="{{ $field['name'] }}" rows="4" class="mt-1 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus:border-emerald-700 focus:ring-emerald-700">{{ $createValue }}</textarea>
-                            @elseif ($field['type'] === 'select')
-                                <select name="{{ $field['name'] }}" class="mt-1 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus:border-emerald-700 focus:ring-emerald-700">
-                                    <option value="">Pilih {{ $field['label'] }}</option>
-                                    @foreach ($field['options'] as $value => $label)
-                                        <option value="{{ $value }}" @selected($createValue === (string) $value)>{{ $label }}</option>
-                                    @endforeach
-                                </select>
-                            @elseif ($field['type'] === 'image')
-                                <input type="file" name="{{ $field['name'] }}" accept="image/*"
-                                    class="mt-1 block w-full text-sm text-slate-600 file:mr-4 file:rounded-full file:border-0 file:bg-emerald-50 file:px-4 file:py-2 file:text-emerald-800 hover:file:bg-emerald-100">
-                            @else
-                                <input type="{{ $field['type'] }}" name="{{ $field['name'] }}"
-                                    value="{{ $field['type'] === 'time' && $createValue ? \Illuminate\Support\Str::substr($createValue, 0, 5) : $createValue }}"
-                                    class="mt-1 block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm focus:border-emerald-700 focus:ring-emerald-700">
-                            @endif
-
-                            @error($field['name'])
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    @endforeach
-
-                    <div class="lg:col-span-2">
-                        <button type="submit" class="inline-flex items-center rounded-full bg-emerald-700 px-5 py-2.5 text-white shadow-sm shadow-emerald-700/15 transition hover:bg-emerald-800">
-                            Simpan {{ $config['label'] }}
-                        </button>
-                    </div>
-                </form>
-            </div>
 
             {{-- DAFTAR DATA --}}
             <div class="rounded-3xl border border-emerald-900/8 bg-white p-6 shadow-[0_18px_40px_rgba(15,23,42,0.05)] lg:p-8">
@@ -95,10 +61,8 @@
                             $bioField = collect($config['fields'])->firstWhere('type', 'textarea');
                         @endphp
 
-                        <div class="rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-emerald-700/30 hover:shadow-sm" id="row-{{ $item->id }}">
-
-                            {{-- ================= MODE LIHAT ================= --}}
-                            <div id="view-{{ $item->id }}" class="flex items-start justify-between gap-6 flex-wrap">
+                        <div class="rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-emerald-700/30 hover:shadow-sm">
+                            <div class="flex items-start justify-between gap-6 flex-wrap">
                                 <div class="flex items-start gap-4 min-w-0">
                                     @if ($imageValue)
                                         <img src="{{ $imageValue }}" alt="Foto" class="h-16 w-16 rounded-full object-cover border border-slate-200 shrink-0">
@@ -153,7 +117,7 @@
                                 </div>
 
                                 <div class="flex items-center gap-2 shrink-0">
-                                    <button type="button" onclick="toggleEdit({{ $item->id }})"
+                                    <button type="button" onclick="openModal('modal-edit-{{ $item->id }}')"
                                         class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 transition hover:border-emerald-700 hover:text-emerald-800">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -174,10 +138,25 @@
                                     </form>
                                 </div>
                             </div>
+                        </div>
 
-                            {{-- ================= MODE EDIT ================= --}}
-                            <div id="edit-{{ $item->id }}" class="hidden mt-5 pt-5 border-t border-slate-100">
-                                <form method="POST" action="{{ route('admin.content.update', [$type, $item->id]) }}" enctype="multipart/form-data" class="grid gap-4 lg:grid-cols-2">
+                        {{-- ================= MODAL EDIT (per item) ================= --}}
+                        <div id="modal-edit-{{ $item->id }}" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4" onclick="if(event.target === this) closeModal('modal-edit-{{ $item->id }}')">
+                            <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl lg:p-8">
+                                <div class="flex items-start justify-between gap-4">
+                                    <div>
+                                        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-emerald-700">Edit Data</p>
+                                        <h3 class="mt-1 text-xl font-semibold text-slate-900">{{ $config['label'] }}</h3>
+                                    </div>
+                                    <button type="button" onclick="closeModal('modal-edit-{{ $item->id }}')"
+                                        class="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <form method="POST" action="{{ route('admin.content.update', [$type, $item->id]) }}" enctype="multipart/form-data" class="mt-6 grid gap-4 lg:grid-cols-2">
                                     @csrf
                                     @method('PUT')
 
@@ -229,11 +208,11 @@
                                         </div>
                                     @endforeach
 
-                                    <div class="lg:col-span-2 flex items-center gap-3 pt-2">
+                                    <div class="lg:col-span-2 flex items-center gap-3 pt-2 border-t border-slate-100 mt-2">
                                         <button type="submit" class="inline-flex items-center rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-medium text-white shadow-sm shadow-emerald-700/15 transition hover:bg-emerald-800">
                                             Simpan perubahan
                                         </button>
-                                        <button type="button" onclick="toggleEdit({{ $item->id }})"
+                                        <button type="button" onclick="closeModal('modal-edit-{{ $item->id }}')"
                                             class="inline-flex items-center rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                                             Batal
                                         </button>
@@ -249,10 +228,95 @@
         </div>
     </div>
 
+    {{-- ================= MODAL TAMBAH ================= --}}
+    <div id="modal-tambah" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4" onclick="if(event.target === this) closeModal('modal-tambah')">
+        <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl lg:p-8">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-emerald-700">Form Tambah</p>
+                    <h3 class="mt-1 text-xl font-semibold text-slate-900">Tambah {{ $config['label'] }}</h3>
+                </div>
+                <button type="button" onclick="closeModal('modal-tambah')"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <form method="POST" action="{{ route('admin.content.store', $type) }}" enctype="multipart/form-data" class="mt-6 grid gap-4 lg:grid-cols-2">
+                @csrf
+                @foreach ($config['fields'] as $field)
+                    @php $createValue = old($field['name']); @endphp
+                    <div class="{{ $field['type'] === 'textarea' ? 'lg:col-span-2' : '' }}">
+                        <label class="block text-xs font-semibold uppercase tracking-[0.15em] text-slate-500">{{ $field['label'] }}</label>
+
+                        @if ($field['type'] === 'textarea')
+                            <textarea name="{{ $field['name'] }}" rows="4" class="mt-1.5 block w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 shadow-sm focus:border-emerald-700 focus:ring-emerald-700 text-sm">{{ $createValue }}</textarea>
+                        @elseif ($field['type'] === 'select')
+                            <select name="{{ $field['name'] }}" class="mt-1.5 block w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 shadow-sm focus:border-emerald-700 focus:ring-emerald-700 text-sm">
+                                <option value="">Pilih {{ $field['label'] }}</option>
+                                @foreach ($field['options'] as $value => $label)
+                                    <option value="{{ $value }}" @selected($createValue === (string) $value)>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        @elseif ($field['type'] === 'image')
+                            <input type="file" name="{{ $field['name'] }}" accept="image/*"
+                                class="mt-1.5 block w-full text-sm text-slate-600 file:mr-4 file:rounded-full file:border-0 file:bg-emerald-50 file:px-4 file:py-2 file:text-emerald-800 hover:file:bg-emerald-100">
+                        @else
+                            <input type="{{ $field['type'] }}" name="{{ $field['name'] }}"
+                                value="{{ $field['type'] === 'time' && $createValue ? \Illuminate\Support\Str::substr($createValue, 0, 5) : $createValue }}"
+                                class="mt-1.5 block w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 shadow-sm focus:border-emerald-700 focus:ring-emerald-700 text-sm">
+                        @endif
+
+                        @error($field['name'])
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                @endforeach
+
+                <div class="lg:col-span-2 flex items-center gap-3 pt-2 border-t border-slate-100 mt-2">
+                    <button type="submit" class="inline-flex items-center rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-medium text-white shadow-sm shadow-emerald-700/15 transition hover:bg-emerald-800">
+                        Simpan {{ $config['label'] }}
+                    </button>
+                    <button type="button" onclick="closeModal('modal-tambah')"
+                        class="inline-flex items-center rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        function toggleEdit(id) {
-            document.getElementById('view-' + id).classList.toggle('hidden');
-            document.getElementById('edit-' + id).classList.toggle('hidden');
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
         }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('[id^="modal-"]').forEach(function (modal) {
+                    if (!modal.classList.contains('hidden')) {
+                        closeModal(modal.id);
+                    }
+                });
+            }
+        });
+
+        @if ($errors->any())
+            @if (old('_token') && request()->routeIs('admin.content.store'))
+                openModal('modal-tambah');
+            @endif
+        @endif
     </script>
 </x-app-layout>
