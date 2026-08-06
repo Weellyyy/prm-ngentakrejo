@@ -13,6 +13,8 @@ Route::get('/agenda', [PublicContentController::class, 'agenda'])->name('agenda'
 Route::get('/informasi-prm', [PublicContentController::class, 'informasiPrm'])->name('informasi-prm');
 Route::get('/ruang-iklan', [PublicContentController::class, 'ruangIklan'])->name('ruang-iklan');
 Route::get('/donasi', [PublicContentController::class, 'donasi'])->name('donasi');
+Route::get('/donasi/kirim', [PublicContentController::class, 'donasiForm'])->name('donasi.form');
+Route::post('/donasi/kirim', [PublicContentController::class, 'donasiStore'])->name('donasi.store');
 Route::get('/program-kerja', [PublicContentController::class, 'programKerja'])->name('program-kerja');
 Route::get('/media-dakwah', [PublicContentController::class, 'mediaDakwah'])->name('media-dakwah');
 

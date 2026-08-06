@@ -2,12 +2,21 @@
 
 @section('content')
     <header class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-[#1e5d46] text-white">
-        <div class="max-w-7xl mx-auto px-6 py-16 lg:py-20">
-            <p class="text-sm uppercase tracking-[0.3em] text-[#f1d58a]">PRM Ngentakrejo</p>
-            <h1 class="mt-4 max-w-3xl text-4xl lg:text-5xl font-bold leading-tight">{{ $pageTitle }}</h1>
-            <p class="mt-4 max-w-3xl text-lg text-emerald-50/85">{{ $pageDescription }}</p>
-        </div>
-    </header>
+    <div class="max-w-7xl mx-auto px-6 py-16 lg:py-20">
+        <p class="text-sm uppercase tracking-[0.3em] text-[#f1d58a]">PRM Ngentakrejo</p>
+        <h1 class="mt-4 max-w-3xl text-4xl lg:text-5xl font-bold leading-tight">{{ $pageTitle }}</h1>
+        <p class="mt-4 max-w-3xl text-lg text-emerald-50/85">{{ $pageDescription }}</p>
+
+        @if (request()->routeIs('donasi'))
+            <a href="{{ route('donasi.form') }}" class="mt-6 inline-flex items-center gap-2 rounded-full bg-[#d9b75f] px-6 py-3 text-sm font-semibold text-emerald-950 shadow-sm shadow-[#d9b75f]/20 transition hover:bg-[#cfac4d]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Kirim donasi
+            </a>
+        @endif
+    </div>
+</header>
 
     <main class="max-w-7xl mx-auto px-6 py-12 space-y-8">
         @foreach ($sections as $section)

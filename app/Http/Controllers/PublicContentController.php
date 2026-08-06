@@ -10,6 +10,7 @@ use App\Models\Pengurus;
 use App\Models\Pengaturan;
 use App\Models\ProfilPrm;
 use App\Models\ProgramKerja;
+use Illuminate\Http\Request;
 
 class PublicContentController extends Controller
 {
@@ -227,6 +228,36 @@ class PublicContentController extends Controller
             ],
         ]);
     }
+
+    public function donasiForm()
+    {
+        return view('donasi.create', [
+            'pageTitle' => 'Kirim Donasi',
+            'pageDescription' => 'Isi form berikut untuk mencatat donasi Anda. Admin akan memverifikasi setelah dana diterima.',
+        ]);
+    }
+
+    public function donasiStore(Request $request)
+    {
+        $data = $request->validate([
+            'nama_donatur' => ['nullable', 'string', 'max:255'],
+            'jumlah' => ['required', 'numeric', 'min:1000'],
+            'tanggal_donasi' => ['required', 'date'],
+            'program_tujuan' => ['nullable', 'string', 'max:255'],
+            'metode_pembayaran' => ['required', 'string', 'max:255'],
+            'bukti_transfer' => ['nullable', 'image', 'max:2048'],
+            'catatan' => ['nullable', 'string'],
+        ]);
+
+        if ($request->hasFile('bukti_transfer')) {
+            $data['bukti_transfer'] = $request->file('bukti_transfer')->store('donasi', 'public');
+        }
+
+        \App\Models\LaporanDonasi::create($data);
+
+        return redirect()->route('donasi')->with('success', 'Terima kasih, donasi Anda berhasil dicatat dan akan segera diverifikasi admin.');
+    }
+
     public function programKerja()
     {
         $data = $this->siteData();
