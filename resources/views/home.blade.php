@@ -1,10 +1,10 @@
 @extends('layouts.public')
 
 @section('content')
-    <header class="relative overflow-hidden text-white">
-        <div class="absolute inset-0 bg-cover bg-center" style="background-image: linear-gradient(rgba(2, 6, 23, 0.72), rgba(2, 6, 23, 0.72)), url('{{ $heroBackground }}');"></div>
+    <header class="relative overflow-hidden text-white min-h-[480px] lg:min-h-[600px] flex items-end">
+        <div class="absolute inset-0 bg-cover bg-[position:center_20%]" style="background-image: linear-gradient(rgba(2, 6, 23, 0.72), rgba(2, 6, 23, 0.72)), url('{{ $heroBackground }}');"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/50 to-emerald-950/40"></div>
-        <div class="max-w-7xl mx-auto px-6 py-16 lg:py-20 grid gap-10 lg:grid-cols-2 lg:items-end">
+        <div class="relative max-w-7xl mx-auto px-6 py-16 lg:py-20 grid gap-10 lg:grid-cols-2 lg:items-end w-full">
             <div>
                 <p class="text-sm uppercase tracking-[0.3em] text-emerald-200">Beranda PRM Ngentakrejo</p>
                 <h1 class="mt-4 text-4xl lg:text-6xl font-bold leading-tight">{{ $profil?->nama_organisasi ?? 'PRM Ngentakrejo' }}</h1>
