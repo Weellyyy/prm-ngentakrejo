@@ -19,7 +19,7 @@
                     </span>
                 </a>
 
-                <div class="flex flex-col gap-3 lg:items-end">
+                <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
                     <nav class="flex flex-wrap gap-2 text-sm">
                         <a href="{{ route('home') }}"
                             class="rounded-full border px-4 py-2 font-medium transition {{ request()->routeIs('home') ? 'border-emerald-700 bg-emerald-50 text-emerald-800' : 'border-emerald-900/10 bg-white text-slate-700 hover:border-emerald-700 hover:text-emerald-800' }}">

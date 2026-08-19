@@ -1,31 +1,40 @@
 @extends('layouts.public')
 
 @section('content')
-    <header class="relative overflow-hidden text-white min-h-[480px] lg:min-h-[600px] flex items-end">
-        <div class="absolute inset-0 bg-cover bg-[position:center_20%]" style="background-image: linear-gradient(rgba(2, 6, 23, 0.72), rgba(2, 6, 23, 0.72)), url('{{ $heroBackground }}');"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/50 to-emerald-950/40"></div>
-        <div class="relative max-w-7xl mx-auto px-6 py-16 lg:py-20 grid gap-10 lg:grid-cols-2 lg:items-end w-full">
-            <div>
-                <p class="text-sm uppercase tracking-[0.3em] text-emerald-200">Beranda PRM Ngentakrejo</p>
+    <header class="relative overflow-hidden text-white min-h-[600px] lg:min-h-[720px] flex items-center">
+        <div class="absolute inset-0 bg-cover bg-[position:center_30%]" style="background-image: url('{{ $heroBackground }}');"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/55 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"></div>
+
+        <div class="relative max-w-7xl mx-auto px-6 py-16 w-full">
+            <div class="max-w-2xl">
+                <p class="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-200">Selamat Datang di</p>
                 <h1 class="mt-4 text-4xl lg:text-6xl font-bold leading-tight">{{ $profil?->nama_organisasi ?? 'PRM Ngentakrejo' }}</h1>
-                <p class="mt-5 max-w-2xl text-lg text-slate-200">{{ $profil?->deskripsi ?? 'Ringkasan singkat tentang profil, agenda, program, media dakwah, donasi, dan ruang iklan.' }}</p>
+                <p class="mt-5 text-lg text-slate-200 leading-relaxed">{{ $profil?->deskripsi ?? 'Ringkasan singkat tentang profil, agenda, program, media dakwah, donasi, dan ruang iklan.' }}</p>
                 <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="{{ route('profil-prm') }}" class="rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900">Lihat Profil</a>
-                    <a href="{{ route('agenda') }}" class="rounded-full border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10">Lihat Agenda</a>
-                </div>
-            </div>
-            <div class="grid gap-3 sm:grid-cols-2">
-                @foreach ($highlights as $highlight)
-                    <a href="{{ route($highlight['route']) }}" class="rounded-2xl bg-white/10 p-4 ring-1 ring-white/10 backdrop-blur hover:bg-white/15 transition">
-                        <p class="text-sm font-semibold text-emerald-200">{{ $highlight['title'] }}</p>
-                        <p class="mt-2 text-sm text-slate-200">{{ $highlight['description'] }}</p>
+                    <a href="{{ route('profil-prm') }}" class="rounded-full bg-[#d9b75f] px-6 py-3 text-sm font-semibold text-emerald-950 shadow-sm shadow-[#d9b75f]/20 transition hover:bg-[#cfac4d]">
+                        Lihat Profil
                     </a>
-                @endforeach
+                    <a href="{{ route('agenda') }}" class="rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+                        Lihat Agenda
+                    </a>
+                </div>
             </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-6 py-12 space-y-8">
+
+        {{-- Highlight cards, dipindah dari dalam hero --}}
+        <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 -mt-16 relative z-10">
+            @foreach ($highlights as $highlight)
+                <a href="{{ route($highlight['route']) }}" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_18px_40px_rgba(15,23,42,0.08)] transition hover:-translate-y-0.5 hover:border-emerald-700/30 hover:shadow-lg">
+                    <p class="text-sm font-semibold text-emerald-700">{{ $highlight['title'] }}</p>
+                    <p class="mt-2 text-sm text-slate-500">{{ $highlight['description'] }}</p>
+                </a>
+            @endforeach
+        </section>
+
         <section class="bg-white rounded-3xl shadow-sm ring-1 ring-slate-200 p-6 lg:p-8">
             <div class="flex items-start justify-between flex-wrap gap-4">
                 <div>
