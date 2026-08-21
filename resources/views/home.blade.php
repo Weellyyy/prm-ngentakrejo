@@ -13,7 +13,7 @@
                 {{--<p class="mt-5 text-lg text-slate-200 leading-relaxed">{{ $profil?->deskripsi ?? 'Ringkasan singkat tentang profil, agenda, program, media dakwah, donasi, dan ruang iklan.' }}</p>--}}
                 <div class="mt-8 flex flex-wrap gap-3">
                     <a href="{{ route('login') }}" class="rounded-full bg-[#d9b75f] px-6 py-3 text-sm font-semibold text-emerald-950 shadow-sm shadow-[#d9b75f]/20 transition hover:bg-[#cfac4d]">
-                        Login
+                        Login Admin
                     </a>
                 </div>
             </div>
