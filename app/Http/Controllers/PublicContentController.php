@@ -148,15 +148,35 @@ class PublicContentController extends Controller
                     ],
                 ],
                 [
-                    'title' => 'Media Sosial',
-                    'type' => 'cards',
-                    'items' => [
-                        ['title' => 'Instagram', 'meta' => 'Akun resmi', 'description' => $data['pengaturan']['instagram'] ?? $data['profil']?->instagram ?? 'Belum diisi'],
-                        ['title' => 'Facebook', 'meta' => 'Halaman resmi', 'description' => $data['pengaturan']['facebook'] ?? $data['profil']?->facebook ?? 'Belum diisi'],
-                        ['title' => 'Youtube', 'meta' => 'Channel resmi', 'description' => $data['pengaturan']['youtube'] ?? $data['profil']?->youtube ?? 'Belum diisi'],
-                        ['title' => 'TikTok', 'meta' => 'Akun resmi', 'description' => $data['pengaturan']['tiktok'] ?? $data['profil']?->tiktok ?? 'Belum diisi'],
+                'title' => 'Media Sosial',
+                'type' => 'cards',
+                'items' => [
+                    [
+                        'title' => 'Instagram',
+                        'meta' => 'Akun resmi',
+                        'description' => $data['pengaturan']['instagram'] ?? $data['profil']?->instagram ?? 'Belum diisi',
+                        'linkUrl' => 'https://www.instagram.com/prmngentakrejo/',
+                    ],
+                    [
+                        'title' => 'Facebook',
+                        'meta' => 'Halaman resmi',
+                        'description' => $data['pengaturan']['facebook'] ?? $data['profil']?->facebook ?? 'Belum diisi',
+                        'linkUrl' => 'https://www.facebook.com/prmngentakrejo/',
+                    ],
+                    [
+                        'title' => 'Youtube',
+                        'meta' => 'Channel resmi',
+                        'description' => $data['pengaturan']['youtube'] ?? $data['profil']?->youtube ?? 'Belum diisi',
+                        'linkUrl' => 'https://www.youtube.com/@prm_ngentakrejo',
+                    ],
+                    [
+                        'title' => 'TikTok',
+                        'meta' => 'Akun resmi',
+                        'description' => $data['pengaturan']['tiktok'] ?? $data['profil']?->tiktok ?? 'Belum diisi',
+                        'linkUrl' => 'https://www.tiktok.com/@prmngentakrejo',
                     ],
                 ],
+            ],
                 [
                     'title' => 'Titik Lokasi',
                     'type' => 'map',

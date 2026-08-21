@@ -10,13 +10,10 @@
             <div class="max-w-2xl">
                 <p class="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-200">Selamat Datang di</p>
                 <h1 class="mt-4 text-4xl lg:text-6xl font-bold leading-tight">{{ $profil?->nama_organisasi ?? 'PRM Ngentakrejo' }}</h1>
-                <p class="mt-5 text-lg text-slate-200 leading-relaxed">{{ $profil?->deskripsi ?? 'Ringkasan singkat tentang profil, agenda, program, media dakwah, donasi, dan ruang iklan.' }}</p>
+                {{--<p class="mt-5 text-lg text-slate-200 leading-relaxed">{{ $profil?->deskripsi ?? 'Ringkasan singkat tentang profil, agenda, program, media dakwah, donasi, dan ruang iklan.' }}</p>--}}
                 <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="{{ route('profil-prm') }}" class="rounded-full bg-[#d9b75f] px-6 py-3 text-sm font-semibold text-emerald-950 shadow-sm shadow-[#d9b75f]/20 transition hover:bg-[#cfac4d]">
-                        Lihat Profil
-                    </a>
-                    <a href="{{ route('agenda') }}" class="rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
-                        Lihat Agenda
+                    <a href="{{ route('login') }}" class="rounded-full bg-[#d9b75f] px-6 py-3 text-sm font-semibold text-emerald-950 shadow-sm shadow-[#d9b75f]/20 transition hover:bg-[#cfac4d]">
+                        Login
                     </a>
                 </div>
             </div>
@@ -47,7 +44,7 @@
                     <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Profil PRM</p>
                     <h3 class="mt-3 text-lg font-semibold text-slate-900">Visi, misi, dan latar belakang</h3>
                     <p class="mt-3 text-sm leading-6 text-slate-600">{{ \Illuminate\Support\Str::limit($profil?->deskripsi ?? 'Profil PRM', 120) }}</p>
-                    <a href="{{ route('profil-prm') }}" class="mt-4 inline-flex text-sm font-semibold text-emerald-700">Buka halaman detail</a>
+                    <a href="{{ route('login') }}" class="mt-4 inline-flex text-sm font-semibold text-emerald-700">Buka halaman detail</a>
                 </article>
 
                 <article class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
