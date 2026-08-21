@@ -56,6 +56,10 @@
                         class="rounded-full border px-4 py-2 font-medium transition {{ request()->routeIs('admin.content.*') && request()->route('type') === 'donasi' ? 'border-emerald-700 bg-emerald-50 text-emerald-800' : 'border-emerald-900/10 bg-white text-slate-700 hover:border-emerald-700 hover:text-emerald-800' }}">
                         Donasi
                     </a>
+                    <a href="{{ route('admin.content.index', ['type' => 'bidang']) }}"
+                        class="rounded-full border px-4 py-2 font-medium transition {{ request()->routeIs('admin.content.*') && request()->route('type') === 'bidang' ? 'border-emerald-700 bg-emerald-50 text-emerald-800' : 'border-emerald-900/10 bg-white text-slate-700 hover:border-emerald-700 hover:text-emerald-800' }}">
+                        Bidang
+                    </a>
                 </nav>
 
                 <div class="flex items-center gap-2">

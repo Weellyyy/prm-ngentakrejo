@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Agenda;
 use App\Models\Artikel;
+use App\Models\Bidang;
 use App\Models\Iklan;
 use App\Models\LaporanDonasi;
 use App\Models\Pengurus;
@@ -18,38 +19,47 @@ class ContentController extends Controller
     private function configs(): array
     {
         return [
-            'pengurus' => [
-            'label' => 'Pengurus',
-            'model' => Pengurus::class,
-            'orderBy' => ['urutan', 'asc'],
-            'fields' => [
-                ['name' => 'nama', 'label' => 'Nama', 'type' => 'text'],
-                ['name' => 'jabatan', 'label' => 'Jabatan', 'type' => 'text'],
-                ['name' => 'bidang', 'label' => 'Bidang', 'type' => 'select', 'options' => ['Pimpinan' => 'Pimpinan', 'Majelis' => 'Majelis']],
-                ['name' => 'periode_jabatan', 'label' => 'Periode Jabatan', 'type' => 'text'],
-                ['name' => 'kontak', 'label' => 'No. HP / Email', 'type' => 'text'],
-                ['name' => 'bio', 'label' => 'Bio Singkat', 'type' => 'textarea'],
-                ['name' => 'gambar', 'label' => 'Foto', 'type' => 'image'],
-                ['name' => 'urutan', 'label' => 'Urutan', 'type' => 'number'],
+            'bidang' => [
+                'label' => 'Bidang',
+                'model' => Bidang::class,
+                'orderBy' => ['nama', 'asc'],
+                'fields' => [
+                    ['name' => 'nama', 'label' => 'Nama Bidang', 'type' => 'text'],
+                ],
+                'summary' => ['nama'],
             ],
-            'summary' => ['nama', 'jabatan', 'bidang'],
+            'pengurus' => [
+                'label' => 'Pengurus',
+                'model' => Pengurus::class,
+                'orderBy' => ['urutan', 'asc'],
+                'fields' => [
+                    ['name' => 'nama', 'label' => 'Nama', 'type' => 'text'],
+                    ['name' => 'jabatan', 'label' => 'Jabatan', 'type' => 'text'],
+                    ['name' => 'bidang', 'label' => 'Bidang', 'type' => 'select', 'options' => Bidang::orderBy('nama')->pluck('nama', 'nama')->all()],
+                    ['name' => 'periode_jabatan', 'label' => 'Periode Jabatan', 'type' => 'text'],
+                    ['name' => 'kontak', 'label' => 'No. HP / Email', 'type' => 'text'],
+                    ['name' => 'bio', 'label' => 'Bio Singkat', 'type' => 'textarea'],
+                    ['name' => 'gambar', 'label' => 'Foto', 'type' => 'image'],
+                    ['name' => 'urutan', 'label' => 'Urutan', 'type' => 'number'],
+                ],
+                'summary' => ['nama', 'jabatan', 'bidang'],
             ],
             'agenda' => [
-            'label' => 'Agenda Kegiatan',
-            'model' => Agenda::class,
-            'orderBy' => ['tanggal', 'asc'],
-            'fields' => [
-                ['name' => 'judul', 'label' => 'Judul', 'type' => 'text'],
-                ['name' => 'tanggal', 'label' => 'Tanggal', 'type' => 'date'],
-                ['name' => 'waktu', 'label' => 'Waktu', 'type' => 'time'],
-                ['name' => 'lokasi', 'label' => 'Lokasi', 'type' => 'text'],
-                ['name' => 'deskripsi', 'label' => 'Deskripsi', 'type' => 'textarea'],
-                ['name' => 'gambar', 'label' => 'Poster/Gambar Kegiatan', 'type' => 'image'],
-                ['name' => 'status', 'label' => 'Status', 'type' => 'select', 'options' => ['Akan Datang' => 'Akan Datang', 'Berlangsung' => 'Berlangsung', 'Selesai' => 'Selesai']],
-                ['name' => 'penanggung_jawab', 'label' => 'Penanggung Jawab / Kontak', 'type' => 'text'],
+                'label' => 'Agenda Kegiatan',
+                'model' => Agenda::class,
+                'orderBy' => ['tanggal', 'asc'],
+                'fields' => [
+                    ['name' => 'judul', 'label' => 'Judul', 'type' => 'text'],
+                    ['name' => 'tanggal', 'label' => 'Tanggal', 'type' => 'date'],
+                    ['name' => 'waktu', 'label' => 'Waktu', 'type' => 'time'],
+                    ['name' => 'lokasi', 'label' => 'Lokasi', 'type' => 'text'],
+                    ['name' => 'deskripsi', 'label' => 'Deskripsi', 'type' => 'textarea'],
+                    ['name' => 'gambar', 'label' => 'Poster/Gambar Kegiatan', 'type' => 'image'],
+                    ['name' => 'status', 'label' => 'Status', 'type' => 'select', 'options' => ['Akan Datang' => 'Akan Datang', 'Berlangsung' => 'Berlangsung', 'Selesai' => 'Selesai']],
+                    ['name' => 'penanggung_jawab', 'label' => 'Penanggung Jawab / Kontak', 'type' => 'text'],
+                ],
+                'summary' => ['judul', 'tanggal', 'lokasi'],
             ],
-            'summary' => ['judul', 'tanggal', 'lokasi'],
-        ],
             'program-kerja' => [
                 'label' => 'Program Kerja',
                 'model' => ProgramKerja::class,
@@ -77,35 +87,35 @@ class ContentController extends Controller
                 'summary' => ['judul', 'penulis', 'tanggal'],
             ],
             'ruang-iklan' => [
-            'label' => 'Ruang Iklan',
-            'model' => Iklan::class,
-            'orderBy' => ['created_at', 'desc'],
-            'fields' => [
-                ['name' => 'nama', 'label' => 'Judul Iklan', 'type' => 'text'],
-                ['name' => 'kontak', 'label' => 'Kontak', 'type' => 'text'],
-                ['name' => 'deskripsi', 'label' => 'Deskripsi', 'type' => 'textarea'],
-                ['name' => 'gambar', 'label' => 'Gambar/Banner', 'type' => 'image'],
-                ['name' => 'link_url', 'label' => 'Link Tujuan (saat diklik)', 'type' => 'text'],
-                ['name' => 'tanggal_mulai', 'label' => 'Tanggal Mulai Tayang', 'type' => 'date'],
-                ['name' => 'tanggal_expired', 'label' => 'Tanggal Selesai Tayang', 'type' => 'date'],
-                ['name' => 'status', 'label' => 'Status', 'type' => 'select', 'options' => ['Aktif' => 'Aktif', 'Nonaktif' => 'Nonaktif']],
-            ],
-            'summary' => ['nama', 'kontak', 'tanggal_expired'],
+                'label' => 'Ruang Iklan',
+                'model' => Iklan::class,
+                'orderBy' => ['created_at', 'desc'],
+                'fields' => [
+                    ['name' => 'nama', 'label' => 'Judul Iklan', 'type' => 'text'],
+                    ['name' => 'kontak', 'label' => 'Kontak', 'type' => 'text'],
+                    ['name' => 'deskripsi', 'label' => 'Deskripsi', 'type' => 'textarea'],
+                    ['name' => 'gambar', 'label' => 'Gambar/Banner', 'type' => 'image'],
+                    ['name' => 'link_url', 'label' => 'Link Tujuan (saat diklik)', 'type' => 'text'],
+                    ['name' => 'tanggal_mulai', 'label' => 'Tanggal Mulai Tayang', 'type' => 'date'],
+                    ['name' => 'tanggal_expired', 'label' => 'Tanggal Selesai Tayang', 'type' => 'date'],
+                    ['name' => 'status', 'label' => 'Status', 'type' => 'select', 'options' => ['Aktif' => 'Aktif', 'Nonaktif' => 'Nonaktif']],
+                ],
+                'summary' => ['nama', 'kontak', 'tanggal_expired'],
             ],
             'donasi' => [
-            'label' => 'Donasi',
-            'model' => LaporanDonasi::class,
-            'orderBy' => ['tanggal_donasi', 'desc'],
-            'fields' => [
-                ['name' => 'nama_donatur', 'label' => 'Nama Donatur (kosongkan jika anonim)', 'type' => 'text'],
-                ['name' => 'jumlah', 'label' => 'Jumlah Donasi', 'type' => 'number'],
-                ['name' => 'tanggal_donasi', 'label' => 'Tanggal Donasi', 'type' => 'date'],
-                ['name' => 'program_tujuan', 'label' => 'Program/Tujuan Donasi', 'type' => 'text'],
-                ['name' => 'metode_pembayaran', 'label' => 'Metode Pembayaran', 'type' => 'text'],
-                ['name' => 'bukti_transfer', 'label' => 'Bukti Transfer (khusus verifikasi admin)', 'type' => 'image'],
-                ['name' => 'catatan', 'label' => 'Catatan/Doa', 'type' => 'textarea'],
-            ],
-            'summary' => ['nama_donatur', 'jumlah', 'tanggal_donasi'],
+                'label' => 'Donasi',
+                'model' => LaporanDonasi::class,
+                'orderBy' => ['tanggal_donasi', 'desc'],
+                'fields' => [
+                    ['name' => 'nama_donatur', 'label' => 'Nama Donatur (kosongkan jika anonim)', 'type' => 'text'],
+                    ['name' => 'jumlah', 'label' => 'Jumlah Donasi', 'type' => 'number'],
+                    ['name' => 'tanggal_donasi', 'label' => 'Tanggal Donasi', 'type' => 'date'],
+                    ['name' => 'program_tujuan', 'label' => 'Program/Tujuan Donasi', 'type' => 'text'],
+                    ['name' => 'metode_pembayaran', 'label' => 'Metode Pembayaran', 'type' => 'text'],
+                    ['name' => 'bukti_transfer', 'label' => 'Bukti Transfer (khusus verifikasi admin)', 'type' => 'image'],
+                    ['name' => 'catatan', 'label' => 'Catatan/Doa', 'type' => 'textarea'],
+                ],
+                'summary' => ['nama_donatur', 'jumlah', 'tanggal_donasi'],
             ],
         ];
     }
