@@ -71,7 +71,7 @@
                 <article class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                     <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Media Dakwah</p>
                     <h3 class="mt-3 text-lg font-semibold text-slate-900">{{ $media->first()?->judul ?? 'Belum ada artikel' }}</h3>
-                    <p class="mt-3 text-sm leading-6 text-slate-600">{{ $media->first()?->ringkasan ?? 'Konten dakwah terbaru tampil di halaman media dakwah.' }}</p>
+                    <p class="mt-3 text-sm leading-6 text-slate-600">{{ $media->first()?->isi ? \Illuminate\Support\Str::limit(strip_tags($media->first()->isi), 120) : 'Konten dakwah terbaru tampil di halaman media dakwah.' }}</p>
                     <a href="{{ route('media-dakwah') }}" class="mt-4 inline-flex text-sm font-semibold text-emerald-700">Lihat media dakwah</a>
                 </article>
 

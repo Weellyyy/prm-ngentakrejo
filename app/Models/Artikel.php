@@ -8,5 +8,5 @@ class Artikel extends Model
 {
     protected $table = 'artikel';
 
-    protected $fillable = ['judul', 'penulis', 'tanggal', 'ringkasan', 'isi', 'gambar'];
+    protected $fillable = ['judul', 'jenis_media', 'penulis', 'tanggal', 'ringkasan', 'isi', 'gambar', 'file_media'];
 }

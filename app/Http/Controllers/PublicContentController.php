@@ -33,7 +33,7 @@ class PublicContentController extends Controller
         $pengurus = Pengurus::orderBy('urutan')->get();
         $agendas = Agenda::orderBy('tanggal')->get();
         $programKerja = ProgramKerja::orderBy('created_at', 'desc')->get();
-        $media = Artikel::orderBy('tanggal', 'desc')->take(3)->get();
+        $media = Artikel::orderBy('created_at', 'desc')->take(3)->get();
         $iklan = Iklan::orderBy('created_at', 'desc')->take(3)->get();
         $donasi = LaporanDonasi::orderBy('created_at', 'desc')->first();
         $pengaturan = Pengaturan::pluck('value', 'key');
@@ -302,22 +302,19 @@ class PublicContentController extends Controller
     public function mediaDakwah()
     {
         $data = $this->siteData();
+        $semuaMedia = \App\Models\Artikel::orderBy('created_at', 'desc')->get();
 
-        return view('pages.show', $data + [
+        return view('pages.media-dakwah', $data + [
             'pageTitle' => 'Media Dakwah',
             'pageDescription' => 'Artikel, ringkasan, dan konten dakwah terbaru.',
-            'sections' => [
-                [
-                    'title' => 'Artikel Terbaru',
-                    'type' => 'cards',
-                    'items' => $data['media']->map(fn ($item) => [
-                        'title' => $item->judul,
-                        'meta' => $item->tanggal.' • '.$item->penulis,
-                        'description' => $item->ringkasan,
-                        'image' => $this->publicImageUrl($item->gambar),
-                    ])->all(),
-                ],
-            ],
+            'items' => $semuaMedia->map(fn ($item) => [
+                'title' => $item->judul,
+                'date' => $item->created_at->translatedFormat('d F Y'),
+                'jenis_media' => $item->jenis_media,
+                'isi' => $item->isi,
+                'file_media' => $this->publicImageUrl($item->file_media),
+                'gambar' => $this->publicImageUrl($item->gambar),
+            ])->all(),
         ]);
     }
 }

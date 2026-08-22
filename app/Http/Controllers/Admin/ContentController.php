@@ -75,16 +75,14 @@ class ContentController extends Controller
             'media-dakwah' => [
                 'label' => 'Media Dakwah',
                 'model' => Artikel::class,
-                'orderBy' => ['tanggal', 'desc'],
+                'orderBy' => ['created_at', 'desc'],
                 'fields' => [
-                    ['name' => 'judul', 'label' => 'Judul', 'type' => 'text'],
-                    ['name' => 'penulis', 'label' => 'Penulis', 'type' => 'text'],
-                    ['name' => 'tanggal', 'label' => 'Tanggal', 'type' => 'date'],
-                    ['name' => 'ringkasan', 'label' => 'Ringkasan', 'type' => 'textarea'],
-                    ['name' => 'isi', 'label' => 'Isi', 'type' => 'textarea'],
-                    ['name' => 'gambar', 'label' => 'Gambar', 'type' => 'image'],
+                    ['name' => 'judul', 'label' => 'Judul Konten', 'type' => 'text'],
+                    ['name' => 'jenis_media', 'label' => 'Jenis Media', 'type' => 'select', 'options' => ['artikel' => 'Artikel', 'video' => 'Video', 'audio' => 'Audio', 'infografis' => 'Infografis']],
+                    ['name' => 'isi', 'label' => 'Isi Konten (Teks / Link Video)', 'type' => 'textarea'],
+                    ['name' => 'file_media', 'label' => 'Isi Konten (File Audio / Gambar)', 'type' => 'file'],
                 ],
-                'summary' => ['judul', 'penulis', 'tanggal'],
+                'summary' => ['judul', 'jenis_media', 'created_at'],
             ],
             'ruang-iklan' => [
                 'label' => 'Ruang Iklan',
@@ -151,10 +149,14 @@ class ContentController extends Controller
                 $ruleSet[] = 'numeric';
             } elseif ($field['type'] === 'image') {
                 $ruleSet[] = 'image';
+            } elseif ($field['type'] === 'file') {
+                $ruleSet[] = 'file';
             }
 
             if ($field['type'] === 'image') {
                 $ruleSet[] = 'max:2048';
+            } elseif ($field['type'] === 'file') {
+                $ruleSet[] = 'max:20480';
             }
 
             if ($field['type'] === 'select' && isset($field['options'])) {
@@ -170,7 +172,7 @@ class ContentController extends Controller
     private function imageFields(string $type): array
     {
         return collect($this->config($type)['fields'])
-            ->filter(fn ($field) => $field['type'] === 'image')
+            ->filter(fn ($field) => $field['type'] === 'image' || $field['type'] === 'file')
             ->pluck('name')
             ->all();
     }
@@ -233,7 +235,9 @@ class ContentController extends Controller
 
         $items = $query->get();
 
-        return view('admin.content.index', [
+        $view = view()->exists('admin.content.'.$type) ? 'admin.content.'.$type : 'admin.content.index';
+
+        return view($view, [
             'type' => $type,
             'config' => $config,
             'items' => $items,
