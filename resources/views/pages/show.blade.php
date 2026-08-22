@@ -97,6 +97,9 @@
                                     <h3 class="mt-3 text-lg font-semibold text-slate-900">{{ $item['title'] }}</h3>
 
                                     @if ($isPengurusSection)
+                                        @if (!empty($item['bidang']))
+                                            <p class="mt-1 text-xs text-slate-500">Bidang: {{ $item['bidang'] }}</p>
+                                        @endif
                                         @if (!empty($item['periode']))
                                             <p class="mt-1 text-xs text-slate-500">Periode: {{ $item['periode'] }}</p>
                                         @endif

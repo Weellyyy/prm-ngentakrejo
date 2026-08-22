@@ -95,6 +95,7 @@ class PublicContentController extends Controller
                     'items' => $data['pengurus']->map(fn ($item) => [
                         'title' => $item->nama,
                         'meta' => $item->jabatan,
+                        'bidang' => $item->bidang,
                         'periode' => $item->periode_jabatan,
                         'kontak' => $item->kontak,
                         'description' => $item->bio ?? 'Belum ada bio.',

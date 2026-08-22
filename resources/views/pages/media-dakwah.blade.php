@@ -22,7 +22,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
-                        @forelse ($items as $item)
+                        @forelse ($items as $index => $item)
                             @php
                                 // Default colors and icons
                                 $badgeColor = 'bg-emerald-100 text-emerald-800 border-emerald-200';
@@ -103,9 +103,15 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 align-top text-right">
-                                    <button class="inline-flex items-center px-4 py-2 rounded-lg border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 transition text-sm font-medium">
-                                        Lihat
-                                    </button>
+                                    @if ($item['jenis_media'] === 'video' && $item['isi'])
+                                        <a href="{{ $item['isi'] }}" target="_blank" class="inline-flex items-center px-4 py-2 rounded-lg border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 transition text-sm font-medium">
+                                            Tonton
+                                        </a>
+                                    @elseif ($item['jenis_media'] !== 'audio')
+                                        <button type="button" onclick="openMediaModal('modal-media-{{ $index }}')" class="inline-flex items-center px-4 py-2 rounded-lg border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 transition text-sm font-medium">
+                                            Lihat
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -120,4 +126,69 @@
             </div>
         </div>
     </main>
+
+    {{-- MODALS --}}
+    @foreach ($items as $index => $item)
+        @if ($item['jenis_media'] !== 'audio' && $item['jenis_media'] !== 'video')
+            <div id="modal-media-{{ $index }}" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4 transition-opacity backdrop-blur-sm" onclick="if(event.target === this) closeMediaModal('modal-media-{{ $index }}')">
+                <div class="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl lg:p-8 relative">
+                    <button type="button" onclick="closeMediaModal('modal-media-{{ $index }}')" class="absolute top-6 right-6 inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200 hover:text-slate-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                    
+                    <div class="pr-10">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border text-xs font-medium bg-slate-100 text-slate-700 border-slate-200 mb-4">
+                            {{ ucfirst($item['jenis_media'] ?? 'Artikel') }}
+                        </span>
+                        <h3 class="text-2xl font-bold text-slate-900 leading-tight">{{ $item['title'] }}</h3>
+                        <p class="text-sm text-slate-500 mt-2">{{ $item['date'] }}</p>
+                    </div>
+
+                    <div class="mt-8 prose prose-slate max-w-none text-slate-700">
+                        @if ($item['jenis_media'] === 'infografis' && $item['file_media'])
+                            <img src="{{ $item['file_media'] }}" alt="{{ $item['title'] }}" class="w-full h-auto rounded-xl shadow-sm border border-slate-200 mb-6">
+                        @elseif ($item['gambar'])
+                            <img src="{{ $item['gambar'] }}" alt="{{ $item['title'] }}" class="w-full max-h-[400px] object-cover rounded-xl shadow-sm border border-slate-200 mb-6">
+                        @endif
+
+                        @if ($item['isi'])
+                            <div class="leading-relaxed">
+                                {!! nl2br(e($item['isi'])) !!}
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endforeach
+
+    <script>
+        function openMediaModal(id) {
+            const modal = document.getElementById(id);
+            if(modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+            }
+        }
+
+        function closeMediaModal(id) {
+            const modal = document.getElementById(id);
+            if(modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('[id^="modal-media-"]').forEach(function (modal) {
+                    if (!modal.classList.contains('hidden')) {
+                        closeMediaModal(modal.id);
+                    }
+                });
+            }
+        });
+    </script>
 @endsection
