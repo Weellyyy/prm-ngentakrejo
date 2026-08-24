@@ -77,8 +77,8 @@
 
                 <article class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                     <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Donasi</p>
-                    <h3 class="mt-3 text-lg font-semibold text-slate-900">Periode {{ $donasi?->periode ?? 'terakhir' }}</h3>
-                    <p class="mt-3 text-sm leading-6 text-slate-600">Masuk Rp {{ number_format((float) ($donasi?->masuk ?? 0), 0, ',', '.') }} dan keluar Rp {{ number_format((float) ($donasi?->keluar ?? 0), 0, ',', '.') }}.</p>
+                    <h3 class="mt-3 text-lg font-semibold text-slate-900">Donasi Terbaru</h3>
+                    <p class="mt-3 text-sm leading-6 text-slate-600">Terdapat donasi masuk sebesar Rp {{ number_format((float) ($donasi?->jumlah ?? 0), 0, ',', '.') }} dari {{ $donasi?->nama_donatur ?: 'Hamba Allah' }}.</p>
                     <a href="{{ route('donasi') }}" class="mt-4 inline-flex text-sm font-semibold text-emerald-700">Lihat donasi</a>
                 </article>
             </div>

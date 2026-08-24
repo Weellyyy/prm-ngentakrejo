@@ -6,9 +6,14 @@
     <title>{{ $title ?? config('app.name', 'PRM Ngentakrejo') }}</title>
     <link rel="icon" type="image/png" href="{{ asset('images/muhammadiyah.png') }}">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-[#f6faf7] text-slate-800 antialiased">
+<body class="font-sans bg-[#f6faf7] text-slate-800 antialiased">
     <div class="min-h-screen flex flex-col" x-data="{ open: false }">
         <header class="sticky top-0 z-50 border-b border-emerald-900/10 bg-white/90 backdrop-blur-xl">
             <div class="max-w-7xl mx-auto px-6 py-4">
