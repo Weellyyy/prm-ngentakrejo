@@ -29,19 +29,21 @@ class PublicContentController extends Controller
 
     private function siteData(): array
     {
-        $profil = ProfilPrm::where('is_active', true)->latest()->first();
-        $pengurus = Pengurus::orderBy('urutan')->get();
-        $agendas = Agenda::orderBy('tanggal')->get();
-        $programKerja = ProgramKerja::orderBy('created_at', 'desc')->get();
-        $media = Artikel::orderBy('created_at', 'desc')->take(3)->get();
-        $iklan = Iklan::orderBy('created_at', 'desc')->take(3)->get();
-        $donasi = LaporanDonasi::orderBy('created_at', 'desc')->first();
-        $pengaturan = Pengaturan::pluck('value', 'key');
+        return \Illuminate\Support\Facades\Cache::remember('public_site_data', 300, function () {
+            $profil = ProfilPrm::where('is_active', true)->latest()->first();
+            $pengurus = Pengurus::orderBy('urutan')->get();
+            $agendas = Agenda::orderBy('tanggal', 'desc')->take(20)->get();
+            $programKerja = ProgramKerja::orderBy('created_at', 'desc')->take(20)->get();
+            $media = Artikel::orderBy('created_at', 'desc')->take(3)->get();
+            $iklan = Iklan::orderBy('created_at', 'desc')->take(3)->get();
+            $donasi = LaporanDonasi::orderBy('created_at', 'desc')->first();
+            $pengaturan = Pengaturan::pluck('value', 'key');
 
-        $heroBackground = $this->publicImageUrl($profil?->hero_background_image)
-            ?: 'https://images.unsplash.com/photo-1523162620-3f5c1c9f0fbb?auto=format&fit=crop&w=1600&q=80';
+            $heroBackground = $this->publicImageUrl($profil?->hero_background_image)
+                ?: 'https://images.unsplash.com/photo-1523162620-3f5c1c9f0fbb?auto=format&fit=crop&w=1600&q=80';
 
-        return compact('profil', 'pengurus', 'agendas', 'programKerja', 'media', 'iklan', 'donasi', 'pengaturan', 'heroBackground');
+            return compact('profil', 'pengurus', 'agendas', 'programKerja', 'media', 'iklan', 'donasi', 'pengaturan', 'heroBackground');
+        });
     }
 
     public function home()
@@ -303,19 +305,23 @@ class PublicContentController extends Controller
     public function mediaDakwah()
     {
         $data = $this->siteData();
-        $semuaMedia = \App\Models\Artikel::orderBy('created_at', 'desc')->get();
+        $semuaMedia = \App\Models\Artikel::orderBy('created_at', 'desc')->paginate(12);
 
-        return view('pages.media-dakwah', $data + [
-            'pageTitle' => 'Media Dakwah',
-            'pageDescription' => 'Artikel, ringkasan, dan konten dakwah terbaru.',
-            'items' => $semuaMedia->map(fn ($item) => [
+        $semuaMedia->getCollection()->transform(function ($item) {
+            return [
                 'title' => $item->judul,
                 'date' => $item->created_at->translatedFormat('d F Y'),
                 'jenis_media' => $item->jenis_media,
                 'isi' => $item->isi,
                 'file_media' => $this->publicImageUrl($item->file_media),
                 'gambar' => $this->publicImageUrl($item->gambar),
-            ])->all(),
+            ];
+        });
+
+        return view('pages.media-dakwah', $data + [
+            'pageTitle' => 'Media Dakwah',
+            'pageDescription' => 'Artikel, ringkasan, dan konten dakwah terbaru.',
+            'items' => $semuaMedia,
         ]);
     }
 }

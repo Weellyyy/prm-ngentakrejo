@@ -125,6 +125,10 @@
                 </table>
             </div>
         </div>
+        
+        <div class="mt-6">
+            {{ $items->links() }}
+        </div>
     </main>
 
     {{-- MODALS --}}
